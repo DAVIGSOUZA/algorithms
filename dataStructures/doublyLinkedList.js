@@ -1,43 +1,17 @@
-const linkedListExample = {
-  head: {
-    value: 10,
-    next: {
-      value: 5,
-      next: {
-        value: 16,
-        next: null
-      }
-    }
-  }
-}
-
-/*
-fast insertion
-fast deletion
-ordered
-flexible size
-
-
-
-down side
-
-slow lookup
-more memory
-*/
-
-
 class Node {
   constructor(value) {
     this.value = value,
     this.next = null
+    this.prev = null
   }
 }
 
-class LinkedList {
+class DoublyLinkedList {
   constructor(value) {
     this.head = {
       value,
-      next: null
+      next: null,
+      prev: null
     }
     this.tail = this.head
     this.length = 1
@@ -46,6 +20,8 @@ class LinkedList {
   // O(1)
   append(value) {
     const newNode = new Node(value)
+
+    newNode.prev = this.tail
 
     this.tail.next = newNode
 
@@ -61,6 +37,8 @@ class LinkedList {
     const newNode = new Node(value)
 
     newNode.next = this.head
+
+    this.head.prev = newNode
 
     this.head = newNode
 
@@ -80,7 +58,7 @@ class LinkedList {
       currentNode = currentNode.next
     }
 
-    return arr
+    return {values: arr, length: this.length}
   }
 
   // O(n)
@@ -112,11 +90,11 @@ class LinkedList {
 
     const newNode = new Node(value)
 
-    const previousNode = this.traverse(index - 1)
+    const prevNode = this.traverse(index - 1)
 
-    const nextNode = previousNode.next
+    const nextNode = prevNode.next
 
-    previousNode.next = newNode
+    prevNode.next = newNode
 
     newNode.next = nextNode
 
@@ -141,59 +119,29 @@ class LinkedList {
       targetIndex = this.length - 1
     }
 
-    const previousNode = this.traverse(targetIndex -1)
+    const prevNode = this.traverse(targetIndex -1)
 
-    const removeNode = previousNode.next
+    const nodeToRemove = prevNode.next
 
-    const nextNode = removeNode.next
+    const nextNode = nodeToRemove.next
 
-    previousNode.next = nextNode
+    prevNode.next = nextNode
+
+    if (index < this.length) {
+      nextNode.prev =  prevNode
+    }
 
     this.length--
 
     return this.printList()
   }
-
-  // EXERCISE 
-  // Create a reverse method
-  // O(n)
-  reverse() {
-    if(this.length === 1) {
-      return this.printList()
-    }
-
-    let first = this.head
-
-    this.tail = this.head
-
-    let second = first.next
-
-    while (second) {  
-      const temp = second.next 
-
-      second.next = first
-
-      first = second
-
-      second = temp
-    }
-
-    this.head.next = null
-
-    this.head = first
-
-    return this.printList()
-  }
 }
 
-const myLinkedList = new LinkedList(10)
+const myDoublyLinkedList = new DoublyLinkedList(10)
 
-console.log(myLinkedList.append(5));
-console.log(myLinkedList.append(16));
-console.log(myLinkedList.prepend(1));
-console.log(myLinkedList.printList());
-console.log(myLinkedList.insert(2, 99));
-console.log(myLinkedList.remove(2));
-console.log(myLinkedList.reverse());
-
-
+console.log(myDoublyLinkedList.append(5));
+console.log(myDoublyLinkedList.append(16));
+console.log(myDoublyLinkedList.prepend(1));
+console.log(myDoublyLinkedList.printList());
+console.log(myDoublyLinkedList.insert(2, 99));
+console.log(myDoublyLinkedList.remove(50));
